@@ -1,0 +1,15 @@
+{
+  "name": "libbpf",
+  "version-string": "1.4.1",
+  "description": [
+    "User-space library for interacting with the Linux kernel's eBPF subsystem, ",
+    "written in C."
+  ],
+  "supports": "!windows",
+  "dependencies": [
+    {
+      "name": "elfutils",
+      "version>=": "0.186"
+    }
+  ]
+}
