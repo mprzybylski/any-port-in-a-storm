@@ -25,4 +25,4 @@ vcpkg_from_github(
 # See https://github.com/libbpf/libbpf#building-libbpf
 set(ENV{BUILD_STATIC_ONLY} y)
 
-vcpkg_build_make(ENABLE_INSTALL)
+vcpkg_build_make(ENABLE_INSTALL SUBPATH src)
