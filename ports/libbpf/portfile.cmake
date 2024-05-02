@@ -25,4 +25,10 @@ vcpkg_from_github(
 # See https://github.com/libbpf/libbpf#building-libbpf
 set(ENV{BUILD_STATIC_ONLY} y)
 
+# Since we have a Makefile, and not a configure script, call
+# vcpkg_configure_make() with SKIP_CONFIGURE
+vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH}/src SKIP_CONFIGURE)
+
 vcpkg_build_make(ENABLE_INSTALL SUBPATH src)
+
+unset(ENV{BUILD_STATIC_ONLY})
