@@ -18,17 +18,39 @@ vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO libbpf/libbpf
         REF v1.4.1
+        PATCHES libbpf-1.4.1-cmake-build-wrapper.patch
         SHA512 3073806d9fc2aafb6620f41bf7d73f17ebe92cff577821a309d0fb2192a88b8bb5a984d11590fe1050035dc4dc154d50372f78c2e87a1000ddb795e30120ddf5
         HEAD_REF master
 )
 
-# See https://github.com/libbpf/libbpf#building-libbpf
-set(ENV{BUILD_STATIC_ONLY} y)
+set(LIBBPF_BUILD_ENV_VARS NO_PKG_CONFIG EXTRA_CFLAGS EXTRA_LDFLAGS)
+vcpkg_backup_env_variables(VARS ${LIBBPF_BUILD_ENV_VARS})
 
-# Since we have a Makefile, and not a configure script, call
-# vcpkg_configure_make() with SKIP_CONFIGURE
-vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH}/src SKIP_CONFIGURE)
+# Configure libbpf build with CMake
+vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH})
 
-vcpkg_build_make(ENABLE_INSTALL SUBPATH src)
+# build and install libbpf
+vcpkg_build_cmake()
+vcpkg_install_cmake()
 
-unset(ENV{BUILD_STATIC_ONLY})
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    # Remove static library archive files
+    set(_lib_suffix "${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+    file(GLOB_RECURSE
+            TO_REMOVE
+            "${CURRENT_PACKAGES_DIR}/lib/*${_lib_suffix}"
+            "${CURRENT_PACKAGES_DIR}/debug/lib/*${_lib_suffix}"
+            "${CURRENT_PACKAGES_DIR}/lib/*${_lib_suffix}.*"
+            "${CURRENT_PACKAGES_DIR}/debug/lib/*${_lib_suffix}.*")
+    file(REMOVE ${TO_REMOVE})
+endif()
+
+vcpkg_fixup_pkgconfig()
+vcpkg_install_copyright(FILE_LIST
+        "${SOURCE_PATH}/LICENSE"
+        "${SOURCE_PATH}/LICENSE.BSD-2-Clause"
+        "${SOURCE_PATH}/LICENSE.LGPL-2.1")
+
+# FIXME: remove duplicate include files in debug directory
