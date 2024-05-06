@@ -18,13 +18,11 @@ vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO libbpf/libbpf
         REF v1.4.1
-        PATCHES libbpf-1.4.1-cmake-build-wrapper.patch
         SHA512 3073806d9fc2aafb6620f41bf7d73f17ebe92cff577821a309d0fb2192a88b8bb5a984d11590fe1050035dc4dc154d50372f78c2e87a1000ddb795e30120ddf5
         HEAD_REF master
 )
 
-set(LIBBPF_BUILD_ENV_VARS NO_PKG_CONFIG EXTRA_CFLAGS EXTRA_LDFLAGS)
-vcpkg_backup_env_variables(VARS ${LIBBPF_BUILD_ENV_VARS})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 # Configure libbpf build with CMake
 vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH})
@@ -52,5 +50,3 @@ vcpkg_install_copyright(FILE_LIST
         "${SOURCE_PATH}/LICENSE"
         "${SOURCE_PATH}/LICENSE.BSD-2-Clause"
         "${SOURCE_PATH}/LICENSE.LGPL-2.1")
-
-# FIXME: remove duplicate include files in debug directory

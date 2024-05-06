@@ -1,7 +1,7 @@
 {
   "name": "libbpf",
   "version": "1.4.1",
-  "port-version": 6,
+  "port-version": 7,
   "description": [
     "User-space library for interacting with the Linux kernel's eBPF subsystem, ",
     "written in C."
