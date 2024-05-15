@@ -2,7 +2,7 @@
   "default": {
     "libbpf": {
       "baseline": "1.4.1",
-      "port-version": 8
+      "port-version": 9
     }
   }
 }
